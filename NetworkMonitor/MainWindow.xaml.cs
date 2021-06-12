@@ -1,28 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using MahApps.Metro.Controls;
+using SharpPcap.LibPcap;
+using System.Collections;
+using NetworkMonitor.ViewModel;
+
 namespace NetworkMonitor
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
+            CaptureDevice();
+        }
+
+        public void CaptureDevice()
+        {
+            ArrayList list = new ArrayList();
+
+            var devices = LibPcapLiveDeviceList.Instance;
+
+            if (devices.Count < 1)
+            {
+                MessageBox.Show("No Device");
+            }
+            foreach (var dev in devices)
+            {
+                list.Add(Convert.ToString(dev.Interface.FriendlyName));
+            }
+            DeviceList.ItemsSource = list;
+        }
+
+        private void BtnExit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void ListViewItem_Selected(object sender, RoutedEventArgs e)
+        {
+            new NetworkWindow(DeviceList.SelectedItem.ToString()).Show();
         }
     }
 }

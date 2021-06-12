@@ -15,7 +15,9 @@ namespace NetworkMonitor
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            StartupUri = new Uri(@"ViewModel/NetworkWindow.xaml", UriKind.Relative);
+            //StartupUri = new Uri(@"ViewModel/NetworkWindow.xaml", UriKind.Relative);
+            StartupUri = new Uri(@"MainWindow.xaml", UriKind.Relative);
+
         }
     }
 }

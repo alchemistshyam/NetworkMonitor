@@ -10,30 +10,32 @@ using System.Data.SQLite;
 using NetworkMonitor.Utilities;
 using System.Windows.Threading;
 using System.Data;
+using System.Windows.Media;
 
 namespace NetworkMonitor.ViewModel
 {
     /// <summary>
     /// Interaction logic for NetworkWindow.xaml
     /// </summary>
-    public partial class NetworkWindow : MetroWindow
+    public partial class NetworkWindow : Window
     {
 
         public static int Serial { get; set; }
         public string DeviceChoice { get; set; }
         public static SQLiteConnection  connection { get; set; }
         public static int id { get; set; }
-        public NetworkWindow()
+        public static SharpPcap.LibPcap.LibPcapLiveDevice device { get; set; }
+        public NetworkWindow(string DeviceName)
         {
+            DeviceChoice = DeviceName;
             InitializeComponent();
             Initialize();
-            CaptureDevice();
+            NetworkCapture();
             SetDisplayhTimer();
         }
 
         public void Initialize()
         {
-            DeviceChoice = "";
             connection = null;
             id = 1;
             Serial = 1;
@@ -67,31 +69,12 @@ namespace NetworkMonitor.ViewModel
                     networkModel.protocol = Convert.ToString(networkTable.Rows[i]["protocol"]);
                     networkModel.frameLength = Convert.ToInt32(networkTable.Rows[i]["framelength"]);
                     NetworkMonitorWindow.Items.Add(networkModel);
+                    id++;
                 }
             }
         }
 
-        public ObservableCollection<string> CaptureDevice()
-        {
-            ObservableCollection<string> list = new ObservableCollection<string>();
 
-            var devices = LibPcapLiveDeviceList.Instance;
-
-            if (devices.Count < 1)
-            {
-                return list;
-            }
-
-            int i = 0;
-
-            foreach (var dev in devices)
-            {
-                list.Add(Convert.ToString(dev.Interface.FriendlyName));
-                i++;
-            }
-            CycleChoice_Combo.ItemsSource = list;
-            return list;
-        }
 
         public  void NetworkCapture()
         {
@@ -99,9 +82,8 @@ namespace NetworkMonitor.ViewModel
 
             var devices = LibPcapLiveDeviceList.Instance;
 
-            string DeviceChoice = CycleChoice_Combo.SelectedItem.ToString();
 
-            var device = devices[0];
+            device = devices[0];
             foreach (var dev in devices)
             {
                 if(dev.Interface.FriendlyName.Equals(DeviceChoice))
@@ -111,7 +93,6 @@ namespace NetworkMonitor.ViewModel
                 }
             }
 
-            MessageBox.Show(device.ToString());
 
             device.OnPacketArrival +=
                 new PacketArrivalEventHandler(device_OnPacketArrival);
@@ -157,14 +138,35 @@ namespace NetworkMonitor.ViewModel
 
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
             }
         }
 
 
-        private void StartTest_Btn_Click(object sender, RoutedEventArgs e)
+        private void StopTest_Btn_Click(object sender, RoutedEventArgs e)
         {
-            NetworkCapture();
+            try
+            {
+                device.StopCapture();
+                connection.Close();
+                CloseButton.IsEnabled = true;
+                SnackbarSeven.Background = new SolidColorBrush(Color.FromRgb(0, 255, 128));
+                SnackbarSeven.MessageQueue.Enqueue("Network Connection fetch stopped successfully");
+                return;
+
+            }
+            catch(Exception ex)
+            {
+                SnackbarSeven.Background = new SolidColorBrush(Color.FromRgb(0, 255, 128));
+                SnackbarSeven.MessageQueue.Enqueue(ex.ToString());
+                CloseButton.IsEnabled = true;
+
+            }
+
+        }
+
+        private void BtnExit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

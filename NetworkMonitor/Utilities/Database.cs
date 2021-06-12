@@ -116,7 +116,7 @@ namespace NetworkMonitor.Utilities
             try
             {
                 this.ExecuteNonQuery(String.Format("delete from {0};", tableName));
-                this.ExecuteNonQuery(String.Format("delete from sqlite_sequence where name =  {0};", tableName));
+                this.ExecuteNonQuery(String.Format("delete from sqlite_sequence where name ='{0}';", tableName));
                 return true;
             }
             catch
