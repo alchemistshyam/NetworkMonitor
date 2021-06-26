@@ -102,13 +102,21 @@ namespace NetworkMonitor.Utilities
 
         public int ExecuteNonQuery(string sql)
         {
-            SQLiteConnection cnn = new SQLiteConnection(DbSqliteConnection);
-            cnn.Open();
-            SQLiteCommand mycommand = new SQLiteCommand(cnn);
-            mycommand.CommandText = sql;
-            int rowsUpdated = mycommand.ExecuteNonQuery();
-            cnn.Close();
-            return rowsUpdated;
+            try
+            {
+                SQLiteConnection cnn = new SQLiteConnection(DbSqliteConnection);
+                cnn.Open();
+                SQLiteCommand mycommand = new SQLiteCommand(cnn);
+                mycommand.CommandText = sql;
+                int rowsUpdated = mycommand.ExecuteNonQuery();
+                cnn.Close();
+                return rowsUpdated;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            return 1;
         }
 
         public Boolean DeleteData(string tableName)
