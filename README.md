@@ -13,3 +13,8 @@
 2. Choose the network device from the list
 3. To Start the capture - Click START
 4. To Stop the capture - Click STOP
+
+## Setup
+![alt text] (https://github.com/alchemistshyam/NetworkMonitor/blob/main/1.JPG)
+
+![alt text] (https://github.com/alchemistshyam/NetworkMonitor/blob/main/2.JPG)
