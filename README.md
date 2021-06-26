@@ -15,6 +15,6 @@
 4. To Stop the capture - Click STOP
 
 ## Setup
-![alt text] (https://github.com/alchemistshyam/NetworkMonitor/blob/main/1.JPG)
+![Screenshot](1.JPG)
 
-![alt text] (https://github.com/alchemistshyam/NetworkMonitor/blob/main/2.JPG)
+![Screenshot](2.JPG)
