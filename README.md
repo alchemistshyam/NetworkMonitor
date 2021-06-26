@@ -17,4 +17,4 @@
 ## Setup
 ![Screenshot](1.JPG)
 
-![Screenshot](2.JPG)
+![Screenshot](2.jpg)
